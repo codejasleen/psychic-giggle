@@ -1,4 +1,4 @@
-/* styles.css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -9,15 +9,15 @@ body {
 header {
     background-color: #fff;
     padding: 20px;
-    display: flex;            /* Flexbox for header layout */
-    justify-content: space-between;  /* Space between the left section and right toolbar */
-    align-items: center;      /* Vertically center the elements */
+    display: flex;           
+    justify-content: space-between; 
+    align-items: center;     
     border-bottom: 1px solid #ddd;
 }
 
 header i {
-    font-size: 30px;           /* Set the size of the cat icon */
-    margin-right: 10px;        /* Space between the icon and title */
+    font-size: 30px;           
+    margin-right: 10px;       
 }
 
 header h1 {
@@ -29,7 +29,7 @@ header h1 {
 .toolbar {
     display: flex;
     justify-content: space-around;
-    gap: 10px;  /* Adds some space between buttons */
+    gap: 10px;  
 }
 
 button {
@@ -72,4 +72,4 @@ canvas {
     cursor: pointer;
 }
 
-/* Styling for the shape menu */
+
