@@ -16,16 +16,16 @@ canvas.height = 400; // Fixed height for the canvas
 
 // Default tool properties
 let isDrawing = false;
-let currentTool = 'pencil'; // Default tool is pencil
-let currentColor = '#000000'; // Default color is black
-let currentLineWidth = 5; // Default line thickness
+let currentTool = 'pencil'; 
+let currentColor = '#000000'; 
+let currentLineWidth = 5; 
 
 // Set initial drawing properties
 ctx.lineWidth = currentLineWidth;
 ctx.lineCap = 'round';
 ctx.strokeStyle = currentColor; // Default stroke color is black
 
-// Handle mouse down event (start drawing)
+
 canvas.addEventListener('mousedown', (e) => {
     if (currentTool === 'pencil' || currentTool === 'eraser') {
         isDrawing = true;
@@ -34,7 +34,7 @@ canvas.addEventListener('mousedown', (e) => {
     }
 });
 
-// Handle mouse move event (drawing while mouse is moving)
+
 canvas.addEventListener('mousemove', (e) => {
     if (isDrawing && (currentTool === 'pencil' || currentTool === 'eraser')) {
         ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
@@ -47,7 +47,7 @@ canvas.addEventListener('mouseup', () => {
     isDrawing = false;
 });
 
-// Handle pencil tool click
+
 pencilButton.addEventListener('click', () => {
     currentTool = 'pencil';
     canvas.style.cursor = 'url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/svgs/solid/pencil-alt.svg), auto';
@@ -55,15 +55,15 @@ pencilButton.addEventListener('click', () => {
     ctx.lineWidth = currentLineWidth; // Ensure pencil uses selected thickness
 });
 
-// Handle eraser tool click
+
 eraserButton.addEventListener('click', () => {
     currentTool = 'eraser';
-    canvas.style.cursor = 'crosshair'; // Set crosshair cursor for eraser
-    ctx.strokeStyle = '#ffffff'; // Set eraser color to white
-    ctx.lineWidth = 20; // Set the line width for eraser (larger for eraser)
+    canvas.style.cursor = 'crosshair'; 
+    ctx.strokeStyle = '#ffffff'; 
+    ctx.lineWidth = 20; 
 });
 
-// Handle color picker change
+
 colorPicker.addEventListener('input', (e) => {
     currentColor = e.target.value;
     if (currentTool === 'pencil') {
@@ -73,7 +73,6 @@ colorPicker.addEventListener('input', (e) => {
     }
 });
 
-// Handle line thickness change
 lineThickness.addEventListener('input', (e) => {
     currentLineWidth = e.target.value;
     if (currentTool === 'pencil') {
@@ -98,12 +97,12 @@ exportBtn.addEventListener('click', () => {
     doc.save('drawing.pdf');
 });
 
-// Get references to the voice note button and text area
+
 const voiceNoteButton = document.getElementById('voiceNote');
 const textArea = document.createElement('textarea');
 document.body.appendChild(textArea); // Optionally place the textArea somewhere in your UI
 
-// Initialize the SpeechRecognition API
+
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'en-US'; // Language can be changed as needed
 recognition.continuous = true; // Continuously capture speech (doesn't stop automatically)
@@ -111,7 +110,7 @@ recognition.interimResults = true; // Allow for interim results (partial recogni
 
 let isRecording = false;
 
-// Function to start or stop voice recognition
+
 function toggleVoiceRecognition() {
     if (isRecording) {
         recognition.stop(); // Stop if already recording
@@ -135,7 +134,7 @@ recognition.onresult = (event) => {
     }
 };
 
-// Handle speech end event (called when speech recognition finishes)
+
 recognition.onend = () => {
     if (isRecording) {
         recognition.start(); // Keep listening continuously
@@ -147,7 +146,7 @@ recognition.onerror = (event) => {
     console.error("Speech recognition error", event.error);
 };
 
-// Add an event listener to the voice note button to toggle recognition
+
 voiceNoteButton.addEventListener('click', toggleVoiceRecognition);
 
 
