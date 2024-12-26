@@ -104,9 +104,9 @@ document.body.appendChild(textArea); // Optionally place the textArea somewhere 
 
 
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'en-US'; // Language can be changed as needed
-recognition.continuous = true; // Continuously capture speech (doesn't stop automatically)
-recognition.interimResults = true; // Allow for interim results (partial recognition)
+recognition.lang = 'en-US'; 
+recognition.continuous = true; 
+recognition.interimResults = true; 
 
 let isRecording = false;
 
@@ -127,8 +127,7 @@ function toggleVoiceRecognition() {
 recognition.onresult = (event) => {
     const transcript = event.results[event.results.length - 1][0].transcript;
     
-    // If interimResults is true, the recognition might send partial data
-    // So we only want to update when a final result is received
+   
     if (event.results[event.results.length - 1].isFinal) {
         textArea.value += transcript + ' '; // Append the recognized text to the textarea
     }
