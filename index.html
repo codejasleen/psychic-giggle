@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create - Collaborative Drawing Board</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Include FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <!-- Cat icon using FontAwesome -->
+        <div class="left-section">
+            <i class="fa-solid fa-cat" id="cat-icon"></i>
+            <h1>Create</h1>
+        </div>
+
+        <!-- Toolbar on the right -->
+        <div class="toolbar">
+            <button id="pencil">Pencil</button>
+            <button id="eraser">Eraser</button>
+            <input type="color" id="colorPicker" value="#000000" /> 
+            <input type="range" id="lineThickness" min="1" max="20" value="5" /> 
+            <button id="save">Save as Image</button>
+            <button id="export">Export as PDF</button>
+            <button id="voiceNote">Voice Note</button>
+        </div>
+    </header>
+
+    <div id="drawingArea">
+        <canvas id="canvas"></canvas>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
