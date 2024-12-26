@@ -9,10 +9,19 @@ const saveBtn = document.getElementById('save');
 const exportBtn = document.getElementById('export');
 const voiceNoteBtn = document.getElementById('voiceNote');
 
-
 // Set the canvas size
-canvas.width = window.innerWidth - 40;
-canvas.height = 400; // Fixed height for the canvas
+function setCanvasSize() {
+    const containerWidth = window.innerWidth - 20;
+    canvas.width = containerWidth;
+    canvas.height = Math.min(400, window.innerHeight - 100);
+    
+    // Restore context settings
+    ctx.lineWidth = currentLineWidth;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
+}
+
+setCanvasSize();
 
 // Default tool properties
 let isDrawing = false;
@@ -23,9 +32,9 @@ let currentLineWidth = 5;
 // Set initial drawing properties
 ctx.lineWidth = currentLineWidth;
 ctx.lineCap = 'round';
-ctx.strokeStyle = currentColor; // Default stroke color is black
+ctx.strokeStyle = currentColor;
 
-
+// Mouse event handlers
 canvas.addEventListener('mousedown', (e) => {
     if (currentTool === 'pencil' || currentTool === 'eraser') {
         isDrawing = true;
@@ -34,7 +43,6 @@ canvas.addEventListener('mousedown', (e) => {
     }
 });
 
-
 canvas.addEventListener('mousemove', (e) => {
     if (isDrawing && (currentTool === 'pencil' || currentTool === 'eraser')) {
         ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
@@ -42,19 +50,47 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
-// Handle mouse up event (stop drawing)
 canvas.addEventListener('mouseup', () => {
     isDrawing = false;
 });
 
 
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (currentTool === 'pencil' || currentTool === 'eraser') {
+        isDrawing = true;
+        const touch = e.touches[0];
+        ctx.beginPath();
+        ctx.moveTo(
+            touch.clientX - canvas.offsetLeft,
+            touch.clientY - canvas.offsetTop
+        );
+    }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (isDrawing && (currentTool === 'pencil' || currentTool === 'eraser')) {
+        const touch = e.touches[0];
+        ctx.lineTo(
+            touch.clientX - canvas.offsetLeft,
+            touch.clientY - canvas.offsetTop
+        );
+        ctx.stroke();
+    }
+});
+
+canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+});
+
+// Tool handlers
 pencilButton.addEventListener('click', () => {
     currentTool = 'pencil';
     canvas.style.cursor = 'url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/svgs/solid/pencil-alt.svg), auto';
-    ctx.strokeStyle = currentColor; // Ensure pencil uses selected color
-    ctx.lineWidth = currentLineWidth; // Ensure pencil uses selected thickness
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = currentLineWidth;
 });
-
 
 eraserButton.addEventListener('click', () => {
     currentTool = 'eraser';
@@ -63,25 +99,25 @@ eraserButton.addEventListener('click', () => {
     ctx.lineWidth = 20; 
 });
 
-
 colorPicker.addEventListener('input', (e) => {
     currentColor = e.target.value;
     if (currentTool === 'pencil') {
-        ctx.strokeStyle = currentColor; // Apply selected color to pencil
+        ctx.strokeStyle = currentColor;
     } else if (currentTool === 'eraser') {
-        ctx.strokeStyle = '#ffffff'; // Ensure eraser is white
+        ctx.strokeStyle = '#ffffff';
     }
 });
 
 lineThickness.addEventListener('input', (e) => {
     currentLineWidth = e.target.value;
     if (currentTool === 'pencil') {
-        ctx.lineWidth = currentLineWidth; // Apply selected thickness to pencil
+        ctx.lineWidth = currentLineWidth;
     } else if (currentTool === 'eraser') {
-        ctx.lineWidth = 80; // Set a larger size for the eraser (no effect on pencil)
+        ctx.lineWidth = 80;
     }
 });
 
+// Save and export handlers
 saveBtn.addEventListener('click', () => {
     const dataUrl = canvas.toDataURL();
     const link = document.createElement('a');
@@ -97,11 +133,10 @@ exportBtn.addEventListener('click', () => {
     doc.save('drawing.pdf');
 });
 
-
+// Voice recognition setup
 const voiceNoteButton = document.getElementById('voiceNote');
 const textArea = document.createElement('textarea');
-document.body.appendChild(textArea); // Optionally place the textArea somewhere in your UI
-
+document.body.appendChild(textArea);
 
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'en-US'; 
@@ -110,47 +145,36 @@ recognition.interimResults = true;
 
 let isRecording = false;
 
-
 function toggleVoiceRecognition() {
     if (isRecording) {
-        recognition.stop(); // Stop if already recording
+        recognition.stop();
         isRecording = false;
         voiceNoteButton.textContent = 'Start Voice Note';
     } else {
-        recognition.start(); // Start recording if not already started
+        recognition.start();
         isRecording = true;
         voiceNoteButton.textContent = 'Stop Voice Note';
     }
 }
 
-// Handle speech result event (called when the speech is recognized)
 recognition.onresult = (event) => {
     const transcript = event.results[event.results.length - 1][0].transcript;
-    
-   
     if (event.results[event.results.length - 1].isFinal) {
-        textArea.value += transcript + ' '; // Append the recognized text to the textarea
+        textArea.value += transcript + ' ';
     }
 };
-
 
 recognition.onend = () => {
     if (isRecording) {
-        recognition.start(); // Keep listening continuously
+        recognition.start();
     }
 };
 
-// Handle errors (optional, for debugging)
 recognition.onerror = (event) => {
     console.error("Speech recognition error", event.error);
 };
 
-
 voiceNoteButton.addEventListener('click', toggleVoiceRecognition);
 
-
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 100;
-});
-
+// Window resize handler
+window.addEventListener('resize', setCanvasSize);
